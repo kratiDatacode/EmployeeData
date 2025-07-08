@@ -1,33 +1,48 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect, useState } from 'react'
 import './App.css'
+import { EmployeeData } from './EmployeeData'
 
 function App() {
-  const [count, setCount] = useState(0)
+  
+  const [data,setData]=useState([]);
+
+  useEffect(()=>{
+    setData(EmployeeData)
+  },[]);
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <table className='table table-hover'>
+        <thead>
+          <tr>
+            <th>Sr No.</th>
+            <th>Id</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Age</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            data.map((item,index)=>{
+              return(
+                <tr key={index}>
+                  <td>{index+1}</td>
+                  <td>{item.id}</td>
+                  <td>{item.firstName}</td>
+                  <td>{item.lastName}</td>
+                  <td>{item.age}</td>
+                  <td>
+                    <button className='btn btn-primary'>Edit</button>&nbsp;
+                    <button className='btn btn-danger'>Delete</button>
+                  </td>
+                </tr>
+              )
+            })
+          }
+        </tbody>
+      </table>
     </>
   )
 }
