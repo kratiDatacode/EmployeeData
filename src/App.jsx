@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import { EmployeeData } from "./EmployeeData";
+import * as Yup from "yup";
 
 function App() {
   const [data, setData] = useState([]);
@@ -9,11 +10,21 @@ function App() {
   const [age, setAge] = useState(0);
   const [id, setId] = useState(0);
   const [isUpdate, setIsUpdate] = useState(false);
-
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     setData(EmployeeData);
   }, []);
+
+  const validationSchema = Yup.object().shape({
+    firstName: Yup.string().required("First Name is required"),
+    lastName: Yup.string().required("Last Name is required"),
+    age: Yup.number()
+      .typeError("Age must be a number")
+      .min(18, "You must be at least 18 years old")
+      .max(100, "You cannot be older than 100 years")
+      .required("Age is required"),
+  });
 
   const handleEdit = (id) => {
     const dt = data.filter((item) => item.id === id);
@@ -35,28 +46,58 @@ function App() {
     }
   };
 
-  const handleSave = () => {};
+  const handleSave = (e) => {
+    e.preventDefault();
+    const dt = [...data];
+    const newObject = {
+      id: EmployeeData.length + 1,
+      firstName: firstName,
+      lastName: lastName,
+      age: age,
+    };
+    dt.push(newObject);
+    setData(dt);
+  };
 
-   const handleUpdate = () => {
-    const index=data.map((item)=>{
-      return item.id
-    }).indexOf(id);
+  const handleUpdate = () => {
+    const index = data
+      .map((item) => {
+        return item.id;
+      })
+      .indexOf(id);
 
-    const dt=[...data];
-    dt[index].firstName=firstName;
-    dt[index].lastName=lastName;
-    dt[index].age=age;
+    const dt = [...data];
+    dt[index].firstName = firstName;
+    dt[index].lastName = lastName;
+    dt[index].age = age;
 
     setData(dt);
     handleClear();
-   };
+  };
 
   const handleClear = () => {
-      setId(0);
-      setFirstName('');
-      setLastName('');
-      setAge('');
-      setIsUpdate(false);
+    setId(0);
+    setFirstName("");
+    setLastName("");
+    setAge("");
+    setIsUpdate(false);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await validationSchema.validate(
+        { firstName, lastName, age },
+        { abortEarly: false }
+      );
+      console.log("form submitted", data);
+    } catch (error) {
+      const newErrors = {};
+      error.inner.forEach((err) => {
+        newErrors[err.path] = err.message;
+      });
+      setErrors(newErrors);
+    }
   };
 
   return (
@@ -65,7 +106,7 @@ function App() {
         <div className="col-md-10">
           <div className="row mx-0 d-flex flex-column gap-4 justify-content-center align-items-center">
             <div className="col-md-6 p-4 rounded shadow bg-white">
-              <form>
+              <form onSubmit={handleSubmit}>
                 <div>
                   <label htmlFor="firstName">First Name:</label>
                   <input
@@ -76,6 +117,9 @@ function App() {
                     className="form-control"
                     onChange={(e) => setFirstName(e.target.value)}
                   />
+                  {errors.firstName && (
+                    <small className="error">{errors.firstName}</small>
+                  )}
                 </div>
                 <div>
                   <label htmlFor="lastName">Last Name:</label>
@@ -87,6 +131,9 @@ function App() {
                     className="form-control"
                     onChange={(e) => setLastName(e.target.value)}
                   />
+                  {errors.lastName && (
+                    <small className="error">{errors.lastName}</small>
+                  )}
                 </div>
                 <div>
                   <label htmlFor="age">Age:</label>
@@ -98,22 +145,29 @@ function App() {
                     className="form-control"
                     onChange={(e) => setAge(e.target.value)}
                   />
+                  {errors.age && <small className="error">{errors.age}</small>}
                 </div>
                 <div>
-                  {
-                    !isUpdate? <button
-                    className="btn btn-primary mt-3"
-                    onClick={() => handleSave()}
-                  >
-                    Save
-                  </button>:<button
-                    className="btn btn-primary mt-3"
-                 
-                    onClick={(e) =>{   e.preventDefault(); handleUpdate()}}
-                  >
-                    Update
-                  </button>
-                  }
+                  {!isUpdate ? (
+                    <button
+                      type="submit"
+                      className="btn btn-primary mt-3"
+                      onClick={(e) => handleSave(e)}
+                    >
+                      Save
+                    </button>
+                  ) : (
+                    <button
+                      type="submit"
+                      className="btn btn-primary mt-3"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleUpdate();
+                      }}
+                    >
+                      Update
+                    </button>
+                  )}
                   <button
                     className="btn btn-danger mt-3"
                     onClick={() => handleClear()}
