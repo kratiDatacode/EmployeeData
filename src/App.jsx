@@ -115,7 +115,10 @@ function App() {
                     value={firstName}
                     placeholder="Enter First Name"
                     className="form-control"
-                    onChange={(e) => setFirstName(e.target.value)}
+                    onChange={(e) => {
+                      setFirstName(e.target.value);
+                      setErrors((prev) => ({ ...prev, firstName: "" }));
+                    }}
                   />
                   {errors.firstName && (
                     <small className="error">{errors.firstName}</small>
@@ -129,7 +132,10 @@ function App() {
                     value={lastName}
                     placeholder="Enter last Name"
                     className="form-control"
-                    onChange={(e) => setLastName(e.target.value)}
+                    onChange={(e) => {
+                      setLastName(e.target.value);
+                      setErrors((prev) => ({ ...prev, lastName: "" }));
+                    }}
                   />
                   {errors.lastName && (
                     <small className="error">{errors.lastName}</small>
@@ -143,7 +149,11 @@ function App() {
                     value={age}
                     placeholder="Enter age"
                     className="form-control"
-                    onChange={(e) => setAge(e.target.value)}
+                    onChange={
+                      (e) => {
+                        setAge(e.target.value)
+                      setErrors((prev) => ({ ...prev, age: "" }));
+                      }}
                   />
                   {errors.age && <small className="error">{errors.age}</small>}
                 </div>
