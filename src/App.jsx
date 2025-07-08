@@ -10,6 +10,19 @@ function App() {
     setData(EmployeeData)
   },[]);
 
+  const handleEdit = (id) =>{
+    alert(id);
+  }
+
+  const handleDelete = (id) =>{
+    if(id>0){
+      if(window.confirm("Are you sure to delete this item?")){
+        const dt =data.filter(item=>item.id!==id);
+        setData(dt);
+      }
+    }
+  }
+
   return (
     <>
       <table className='table table-hover'>
@@ -34,8 +47,8 @@ function App() {
                   <td>{item.lastName}</td>
                   <td>{item.age}</td>
                   <td>
-                    <button className='btn btn-primary'>Edit</button>&nbsp;
-                    <button className='btn btn-danger'>Delete</button>
+                    <button className='btn btn-primary' onClick={()=>handleEdit(item.id)}>Edit</button>&nbsp;
+                    <button className='btn btn-danger'onClick={()=>handleDelete(item.id)}>Delete</button>
                   </td>
                 </tr>
               )
@@ -47,4 +60,4 @@ function App() {
   )
 }
 
-export default App
+export default App;
