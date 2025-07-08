@@ -4,13 +4,23 @@ import { EmployeeData } from "./EmployeeData";
 
 function App() {
   const [data, setData] = useState([]);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [age, setAge] = useState(0);
+  const [id, setId] = useState(0);
 
   useEffect(() => {
     setData(EmployeeData);
   }, []);
 
   const handleEdit = (id) => {
-    alert(id);
+    const dt = data.filter((item) => item.id === id);
+    if (dt !== undefined) {
+      setId(id);
+      setFirstName(dt[0].firstName);
+      setLastName(dt[0].lastName);
+      setAge(dt[0].age);
+    }
   };
 
   const handleDelete = (id) => {
@@ -22,10 +32,13 @@ function App() {
     }
   };
 
-   const handleSave = () => {
-  };
+  const handleSave = () => {};
 
-   const handleClear = () => {
+  const handleClear = () => {
+      setId(0);
+      setFirstName();
+      setLastName();
+      setAge();
   };
 
   return (
@@ -34,50 +47,56 @@ function App() {
         <div className="col-md-10">
           <div className="row mx-0 d-flex flex-column gap-4 justify-content-center align-items-center">
             <div className="col-md-6 p-4 rounded shadow bg-white">
-                <form>
-                  <div>
-                    <label htmlFor="firstName">First Name:</label>
-                    <input
-                      type="text"
-                      id="firstName"
-                      placeholder="Enter First Name"
-                      className="form-control"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="lastName">Last Name:</label>
-                    <input
-                      type="text"
-                      id="lastName"
-                      placeholder="Enter last Name"
-                      className="form-control"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="age">Age:</label>
-                    <input
-                      type="text"
-                      id="age"
-                      placeholder="Enter age"
-                      className="form-control"
-                    />
-                  </div>
-                  <div>
-                    <button
-                      className="btn btn-primary mt-3"
-                      onClick={() => handleSave()}
-                    >
-                      Save
-                    </button>
-                    &nbsp;
-                    <button
-                      className="btn btn-danger mt-3"
-                      onClick={() => handleClear()}
-                    >
-                      Clear
-                    </button>
-                  </div>
-                </form>
+              <form>
+                <div>
+                  <label htmlFor="firstName">First Name:</label>
+                  <input
+                    type="text"
+                    id="firstName"
+                    value={firstName}
+                    placeholder="Enter First Name"
+                    className="form-control"
+                    onChange={(e) => setFirstName(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="lastName">Last Name:</label>
+                  <input
+                    type="text"
+                    id="lastName"
+                    value={lastName}
+                    placeholder="Enter last Name"
+                    className="form-control"
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="age">Age:</label>
+                  <input
+                    type="text"
+                    id="age"
+                    value={age}
+                    placeholder="Enter age"
+                    className="form-control"
+                    onChange={(e) => setAge(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <button
+                    className="btn btn-primary mt-3"
+                    onClick={() => handleSave()}
+                  >
+                    Save
+                  </button>
+                  &nbsp;
+                  <button
+                    className="btn btn-danger mt-3"
+                    onClick={() => handleClear()}
+                  >
+                    Clear
+                  </button>
+                </div>
+              </form>
             </div>
             <div className="col-md-6 p-4 rounded shadow bg-white">
               <table className="table table-hover table-bordered text-center align-middle">
