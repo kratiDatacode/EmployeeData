@@ -8,6 +8,8 @@ function App() {
   const [lastName, setLastName] = useState("");
   const [age, setAge] = useState(0);
   const [id, setId] = useState(0);
+  const [isUpdate, setIsUpdate] = useState(false);
+
 
   useEffect(() => {
     setData(EmployeeData);
@@ -16,6 +18,7 @@ function App() {
   const handleEdit = (id) => {
     const dt = data.filter((item) => item.id === id);
     if (dt !== undefined) {
+      setIsUpdate(true);
       setId(id);
       setFirstName(dt[0].firstName);
       setLastName(dt[0].lastName);
@@ -34,11 +37,14 @@ function App() {
 
   const handleSave = () => {};
 
+   const handleUpdate = () => {};
+
   const handleClear = () => {
       setId(0);
       setFirstName();
       setLastName();
       setAge();
+      setIsUpdate(false);
   };
 
   return (
@@ -82,13 +88,19 @@ function App() {
                   />
                 </div>
                 <div>
-                  <button
+                  {
+                    !isUpdate? <button
                     className="btn btn-primary mt-3"
                     onClick={() => handleSave()}
                   >
                     Save
+                  </button>:<button
+                    className="btn btn-primary mt-3"
+                    onClick={() => handleUpdate()}
+                  >
+                    Update
                   </button>
-                  &nbsp;
+                  }
                   <button
                     className="btn btn-danger mt-3"
                     onClick={() => handleClear()}
