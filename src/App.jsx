@@ -37,13 +37,25 @@ function App() {
 
   const handleSave = () => {};
 
-   const handleUpdate = () => {};
+   const handleUpdate = () => {
+    const index=data.map((item)=>{
+      return item.id
+    }).indexOf(id);
+
+    const dt=[...data];
+    dt[index].firstName=firstName;
+    dt[index].lastName=lastName;
+    dt[index].age=age;
+
+    setData(dt);
+    handleClear();
+   };
 
   const handleClear = () => {
       setId(0);
-      setFirstName();
-      setLastName();
-      setAge();
+      setFirstName('');
+      setLastName('');
+      setAge('');
       setIsUpdate(false);
   };
 
@@ -96,7 +108,8 @@ function App() {
                     Save
                   </button>:<button
                     className="btn btn-primary mt-3"
-                    onClick={() => handleUpdate()}
+                 
+                    onClick={(e) =>{   e.preventDefault(); handleUpdate()}}
                   >
                     Update
                   </button>
